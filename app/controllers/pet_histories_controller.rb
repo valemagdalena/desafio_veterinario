@@ -4,31 +4,37 @@ class PetHistoriesController < ApplicationController
   # GET /pet_histories
   # GET /pet_histories.json
   def index
-    @pet_histories = PetHistory.all
+    @pet = Pet.find(params[:pet_id].to_i)
+    @pet_histories = @pet.pet_histories
   end
 
   # GET /pet_histories/1
   # GET /pet_histories/1.json
   def show
+
   end
 
   # GET /pet_histories/new
   def new
-    @pet_history = PetHistory.new
+    @pet = Pet.find(params[:pet_id].to_i)
+    @pet_history = @pet.pet_histories.new
   end
 
   # GET /pet_histories/1/edit
   def edit
+    @pet = Pet.find(params[:pet_id].to_i)
   end
 
   # POST /pet_histories
   # POST /pet_histories.json
   def create
+    @pet = Pet.find(params[:pet_id].to_i)
     @pet_history = PetHistory.new(pet_history_params)
+    @pet_history.pet = @pet
 
     respond_to do |format|
       if @pet_history.save
-        format.html { redirect_to @pet_history, notice: 'Pet history was successfully created.' }
+        format.html { redirect_to pet_pet_history_path(@pet, @pet_history), notice: 'Pet history was successfully created.' }
         format.json { render :show, status: :created, location: @pet_history }
       else
         format.html { render :new }
@@ -40,9 +46,11 @@ class PetHistoriesController < ApplicationController
   # PATCH/PUT /pet_histories/1
   # PATCH/PUT /pet_histories/1.json
   def update
+    @pet = Pet.find(params[:pet_id].to_i)
+    @pet_history.pet = @pet
     respond_to do |format|
       if @pet_history.update(pet_history_params)
-        format.html { redirect_to @pet_history, notice: 'Pet history was successfully updated.' }
+        format.html { redirect_to pet_pet_history_path(@pet, @pet_history), notice: 'Pet history was successfully updated.' }
         format.json { render :show, status: :ok, location: @pet_history }
       else
         format.html { render :edit }
@@ -56,7 +64,7 @@ class PetHistoriesController < ApplicationController
   def destroy
     @pet_history.destroy
     respond_to do |format|
-      format.html { redirect_to pet_histories_url, notice: 'Pet history was successfully destroyed.' }
+      format.html { redirect_to pet_pet_histories_url, notice: 'Pet history was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
